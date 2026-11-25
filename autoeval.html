@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bilan et auto-évaluation — Mathématiques (Secondaire 4)</title>
+<style>
+  :root {
+    --primary: #1e40af;
+    --primary-light: #dbeafe;
+    --success: #15803d;
+    --success-hover: #166534;
+    --border: #cbd5e1;
+    --text: #1e293b;
+    --muted: #64748b;
+    --bg: #f8fafc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.45;
+  }
+  .toolbar {
+    max-width: 860px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    background: #fff;
+    padding: 12px 16px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+  }
+  button {
+    border: none;
+    border-radius: 6px;
+    padding: 9px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-print { background: var(--primary); color: #fff; }
+  .btn-print:hover { background: #1d4ed8; }
+  .btn-reset { background: #e2e8f0; color: #334155; }
+  .btn-reset:hover { background: #cbd5e1; }
+
+  .sheet {
+    max-width: 860px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 28px 34px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  h1 {
+    font-size: 21px;
+    color: var(--primary);
+    margin: 0 0 14px 0;
+    border-bottom: 2px solid var(--primary-light);
+    padding-bottom: 8px;
+  }
+  .student-info {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.2fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .field label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .field input {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .field input:focus {
+    outline: 2px solid var(--primary-light);
+    border-color: var(--primary);
+  }
+  .instructions {
+    background: var(--primary-light);
+    color: #1e3a8a;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+  h2 {
+    font-size: 16px;
+    margin: 18px 0 8px 0;
+    color: #0f172a;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    font-size: 14px;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+  }
+  th {
+    background: #f1f5f9;
+    font-weight: 700;
+    text-align: center;
+  }
+  th:first-child { text-align: left; }
+  td.check-cell {
+    text-align: center;
+    width: 82px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.1s;
+  }
+  td.check-cell:hover {
+    background: #f1f5f9;
+  }
+  td.check-cell.selected {
+    background: var(--primary-light);
+  }
+  .box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #94a3b8;
+    border-radius: 4px;
+    background: #fff;
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 15px;
+  }
+  td.check-cell.selected .box {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: #fff;
+  }
+  .action-plan {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 16px;
+  }
+  .action-plan h2 {
+    margin-top: 0;
+  }
+  .plan-row {
+    margin-bottom: 10px;
+  }
+  .plan-row:last-child { margin-bottom: 0; }
+  .plan-row label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .plan-row input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 14px;
+  }
+  .footer-note {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--muted);
+    text-align: center;
+  }
+  /* Zone d'envoi */
+  .send-zone {
+    margin-top: 18px;
+    text-align: center;
+  }
+  .btn-send {
+    background: var(--success);
+    color: #fff;
+    font-size: 16px;
+    padding: 12px 26px;
+  }
+  .btn-send:hover { background: var(--success-hover); }
+  .btn-send:disabled { background: #94a3b8; cursor: wait; }
+  .status {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: left;
+  }
+  .status.ok { display: block; background: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+  .status.erreur { display: block; background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+
+  /* Champs et lignes manquants */
+  .field input.manquant { border-color: #dc2626; background: #fef2f2; }
+  tr.manquant td:first-child { background: #fee2e2; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .toolbar, .footer-note, .send-zone { display: none !important; }
+    .sheet { box-shadow: none; border: none; padding: 10px; max-width: 100%; }
+    th, td { padding: 5px 8px; font-size: 12.5px; }
+    h1 { font-size: 18px; margin-bottom: 8px; }
+    h2 { font-size: 14px; margin: 10px 0 5px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar" id="toolbar">
+  <button type="button" class="btn-reset" onclick="resetForm()">Réinitialiser la fiche</button>
+  <button type="button" class="btn-print" onclick="window.print()">Imprimer / PDF</button>
+</div>
+
+<div class="sheet">
+  <h1>Bilan et auto-évaluation — Mathématiques (Secondaire 4)</h1>
+
+  <div class="student-info">
+    <div class="field">
+      <label for="studentName">Nom de l'élève</label>
+      <input type="text" id="studentName" placeholder="Prénom et nom">
+    </div>
+    <div class="field">
+      <label for="studentGroup">Groupe</label>
+      <input type="text" id="studentGroup" placeholder="Ex. 402">
+    </div>
+    <div class="field">
+      <label for="evalDate">Date</label>
+      <input type="date" id="evalDate">
+    </div>
+  </div>
+
+  <div class="instructions">
+    <strong>Consigne :</strong> Clique dans la colonne qui correspond le mieux à tes habitudes actuelles en classe et à la maison. Cet outil nous aidera à cibler tes forces et tes objectifs pour la suite de l'étape.
+  </div>
+
+  <h2>Ce que je fais déjà bien (Mes forces)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Habitudes de travail</th>
+        <th>Toujours</th>
+        <th>Parfois</th>
+        <th>Jamais</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-row="f1">
+        <td>Je fais tous les exercices demandés.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="f2">
+        <td>Je corrige mes exercices (avec le corrigé ou en classe) et je vérifie mes démarches.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="f3">
+        <td>Je suis le plan de travail régulièrement.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="f4">
+        <td>Je pose des questions en classe ou en récupération quand je ne comprends pas.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="f5">
+        <td>Mes notes de cours sont complètes et bien organisées.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="f6">
+        <td>Je fais des exercices supplémentaires pour me préparer aux évaluations.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="f7">
+        <td>Je suis inscrit(e) au mentorat (ou je vais en récupération).</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Ce qui me freine et que je peux améliorer (Mes défis)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Comportements et environnement</th>
+        <th>Toujours</th>
+        <th>Parfois</th>
+        <th>Jamais</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-row="d1">
+        <td>Je lis le corrigé sans essayer de faire le problème par moi-même avant.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="d2">
+        <td>Je perds du temps sur mon ordinateur / mon téléphone (jeux, vidéos, réseaux sociaux).</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="d3">
+        <td>Je bavarde ou je me laisse distraire par mes amis pendant les périodes de travail.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+      <tr data-row="d4">
+        <td>Ma place dans la classe nuit à ma concentration.</td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+        <td class="check-cell" onclick="toggleCell(this)"><span class="box"></span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="action-plan">
+    <h2>Mon plan d'action pour la prochaine étape</h2>
+    <div class="plan-row">
+      <label for="goodPoint">Un bon coup que je veux maintenir :</label>
+      <input type="text" id="goodPoint" placeholder="Écris ta réponse ici...">
+    </div>
+    <div class="plan-row">
+      <label for="challengePoint">Un défi que je m'engage à relever dès cette semaine :</label>
+      <input type="text" id="challengePoint" placeholder="Écris ton objectif ici...">
+    </div>
+  </div>
+
+  <div class="send-zone">
+    <button type="button" class="btn-send" id="btnSend" onclick="envoyer()">Envoyer à mon enseignant</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="footer-note">
+    Une fois la fiche remplie, clique sur le bouton vert <strong>« Envoyer à mon enseignant »</strong>. Si tu l'envoies une deuxième fois, ta nouvelle fiche remplacera la précédente.
+  </div>
+</div>
+
+<script>
+  // ⚠️ Colle ici l'URL de ton application Web Apps Script (se termine par /exec)
+  const URL_SCRIPT = 'COLLER_ICI_L_URL_DU_SCRIPT';
+
+  const CHOIX = ['Toujours', 'Parfois', 'Jamais'];
+
+  document.getElementById('evalDate').valueAsDate = new Date();
+
+  function toggleCell(cell) {
+    const wasSelected = cell.classList.contains('selected');
+    const row = cell.parentElement;
+    row.querySelectorAll('.check-cell').forEach(c => {
+      c.classList.remove('selected');
+      c.querySelector('.box').textContent = '';
+    });
+    if (!wasSelected) {
+      cell.classList.add('selected');
+      cell.querySelector('.box').textContent = '✓';
+      row.classList.remove('manquant');
+    }
+  }
+
+  // Retire le contour rouge dès que l'élève écrit dans le champ
+  ['studentName', 'studentGroup'].forEach(id => {
+    document.getElementById(id).addEventListener('input', e => e.target.classList.remove('manquant'));
+  });
+
+  function afficherStatut(type, message) {
+    const st = document.getElementById('status');
+    st.className = 'status ' + type;
+    st.innerHTML = message;
+  }
+
+  function effacerStatut() {
+    const st = document.getElementById('status');
+    st.className = 'status';
+    st.innerHTML = '';
+  }
+
+  function resetForm() {
+    document.querySelectorAll('.check-cell').forEach(c => {
+      c.classList.remove('selected');
+      c.querySelector('.box').textContent = '';
+    });
+    document.querySelectorAll('.manquant').forEach(el => el.classList.remove('manquant'));
+    document.getElementById('studentName').value = '';
+    document.getElementById('studentGroup').value = '';
+    document.getElementById('goodPoint').value = '';
+    document.getElementById('challengePoint').value = '';
+    effacerStatut();
+    document.getElementById('studentName').focus();
+  }
+
+  async function envoyer() {
+    effacerStatut();
+    document.querySelectorAll('.manquant').forEach(el => el.classList.remove('manquant'));
+
+    const champNom = document.getElementById('studentName');
+    const champGroupe = document.getElementById('studentGroup');
+    const nom = champNom.value.trim();
+    const groupe = champGroupe.value.trim();
+
+    // 1. Validation
+    const manques = [];
+    let premier = null;
+
+    if (!nom) { champNom.classList.add('manquant'); manques.push('ton nom'); premier = premier || champNom; }
+    if (!groupe) { champGroupe.classList.add('manquant'); manques.push('ton groupe'); premier = premier || champGroupe; }
+
+    const reponses = {};
+    let lignesVides = 0;
+    document.querySelectorAll('tr[data-row]').forEach(row => {
+      const cases = Array.from(row.querySelectorAll('.check-cell'));
+      const choisie = row.querySelector('.check-cell.selected');
+      if (choisie) {
+        reponses[row.dataset.row] = CHOIX[cases.indexOf(choisie)];
+      } else {
+        row.classList.add('manquant');
+        lignesVides++;
+        premier = premier || row;
+      }
+    });
+    if (lignesVides > 0) {
+      manques.push(lignesVides + (lignesVides > 1 ? ' énoncés sans réponse (en rouge)' : ' énoncé sans réponse (en rouge)'));
+    }
+
+    if (manques.length > 0) {
+      afficherStatut('erreur', '<strong>Il manque :</strong> ' + manques.join(', ') + '.');
+      premier.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    // 2. Données à envoyer
+    const donnees = {
+      nom: nom,
+      groupe: groupe,
+      date: document.getElementById('evalDate').value,
+      reponses: reponses,
+      bonCoup: document.getElementById('goodPoint').value.trim(),
+      defi: document.getElementById('challengePoint').value.trim()
+    };
+
+    // 3. Envoi au Google Sheet
+    const btn = document.getElementById('btnSend');
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+
+    try {
+      // Pas d'en-tête Content-Type : évite le blocage CORS avec Apps Script
+      const rep = await fetch(URL_SCRIPT, { method: 'POST', body: JSON.stringify(donnees) });
+      const res = await rep.json();
+      if (!res.ok) throw new Error(res.erreur || 'Erreur inconnue');
+
+      afficherStatut('ok', res.remplace
+        ? '<strong>Merci !</strong> Ta fiche a été mise à jour (elle remplace ton envoi précédent).'
+        : '<strong>Merci !</strong> Ta fiche a bien été envoyée à ton enseignant.');
+    } catch (err) {
+      afficherStatut('erreur', "<strong>L'envoi n'a pas fonctionné.</strong> Vérifie ta connexion Internet et réessaie. Si le problème persiste, avise ton enseignant.");
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Envoyer à mon enseignant';
+    }
+  }
+</script>
+
+</body>
+</html>
